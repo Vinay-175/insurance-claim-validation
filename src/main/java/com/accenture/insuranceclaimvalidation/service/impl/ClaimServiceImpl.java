@@ -11,7 +11,6 @@ import com.accenture.insuranceclaimvalidation.dto.request.ClaimRequest;
 import com.accenture.insuranceclaimvalidation.dto.response.ClaimResponse;
 import com.accenture.insuranceclaimvalidation.dto.response.FileUploadResponse;
 import com.accenture.insuranceclaimvalidation.entity.Claim;
-import com.accenture.insuranceclaimvalidation.enums.ClaimStatus;
 import com.accenture.insuranceclaimvalidation.exception.InvalidFileException;
 import com.accenture.insuranceclaimvalidation.mapper.ClaimMapper;
 import com.accenture.insuranceclaimvalidation.repository.ClaimRepository;
@@ -35,19 +34,6 @@ public class ClaimServiceImpl implements ClaimService {
     private final ClaimRepository claimRepository;
     private final ClaimMapper claimMapper;
     private final AIRecommendationService aiRecommendationService;
-
-    @Override
-    public ClaimResponse processClaim(ClaimRequest request) {
-
-        log.info("Processing claim request: {}", request);
-
-        return ClaimResponse.builder()
-                .status("SUCCESS")
-                .message("Claim received successfully.")
-                .claimId("TEMP001")
-                .recommendation("Pending Validation")
-                .build();
-    }
 
     @Override
     public FileUploadResponse uploadClaim(MultipartFile file) {
@@ -92,10 +78,11 @@ public class ClaimServiceImpl implements ClaimService {
                     .build();
         }
 
-        boolean duplicate = claimRepository.existsByPolicyNumberAndAdmissionDateAndHospitalName(
-                        claimDetails.getPolicyNumber(),
-                        claimDetails.getAdmissionDate(),
-                        claimDetails.getHospitalName());
+        boolean duplicate = claimRepository.existsByPolicyNumberAndMemberIdAndDiagnosisAndAdmissionDate(
+                claimDetails.getPolicyNumber(),
+                claimDetails.getMemberId(),
+                claimDetails.getDiagnosis(),
+                claimDetails.getAdmissionDate());
 
         ClaimAssessmentContext context = ClaimAssessmentContext.builder()
                 .claimDetails(claimDetails)

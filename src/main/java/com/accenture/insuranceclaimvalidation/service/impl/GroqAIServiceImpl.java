@@ -29,8 +29,7 @@ public class GroqAIServiceImpl implements AIService {
 
             String prompt = PromptTemplates.buildClaimExtractionPrompt(extractedText);
 
-            String aiResponse = chatClient
-                    .prompt()
+            String aiResponse = chatClient.prompt()
                     .user(prompt)
                     .call()
                     .content();
@@ -39,15 +38,11 @@ public class GroqAIServiceImpl implements AIService {
 
             aiResponse = cleanJson(aiResponse);
 
-            ClaimDetails claimDetails = objectMapper.readValue(
-                    aiResponse,
-                    ClaimDetails.class);
+            ClaimDetails claimDetails = objectMapper.readValue(aiResponse, ClaimDetails.class);
 
             calculateLengthOfStay(claimDetails);
 
-            log.info(
-                    "Claim extraction completed successfully for Policy={}",
-                    claimDetails.getPolicyNumber());
+            log.info("Claim extraction completed successfully for Policy={}", claimDetails.getPolicyNumber());
 
             return claimDetails;
 
@@ -55,9 +50,7 @@ public class GroqAIServiceImpl implements AIService {
 
             log.error("Failed to extract claim details.", ex);
 
-            throw new AIException(
-                    "Failed to process AI response.",
-                    ex);
+            throw new AIException("Failed to process AI response.", ex);
 
         }
 
@@ -88,14 +81,11 @@ public class GroqAIServiceImpl implements AIService {
     private void calculateLengthOfStay(
             ClaimDetails claimDetails) {
 
-        if (claimDetails.getAdmissionDate() == null
-                || claimDetails.getDischargeDate() == null) {
+        if (claimDetails.getAdmissionDate() == null || claimDetails.getDischargeDate() == null) {
             return;
         }
 
-        long days = java.time.temporal.ChronoUnit.DAYS.between(
-                claimDetails.getAdmissionDate(),
-                claimDetails.getDischargeDate());
+        long days = java.time.temporal.ChronoUnit.DAYS.between(claimDetails.getAdmissionDate(), claimDetails.getDischargeDate());
 
         if (days >= 0) {
             claimDetails.setLengthOfStay((int) days);

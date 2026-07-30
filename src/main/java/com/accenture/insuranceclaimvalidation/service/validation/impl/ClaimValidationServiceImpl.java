@@ -57,170 +57,104 @@ public class ClaimValidationServiceImpl implements ClaimValidationService {
                 .build();
     }
 
-    private void validatePatientName(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validatePatientName(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getPatientName())) {
             errors.add("Patient Name is mandatory.");
         }
-
     }
 
-    private void validateAge(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateAge(ClaimDetails claimDetails, List<String> errors) {
         if (claimDetails.getAge() == null) {
             errors.add("Patient Age is mandatory.");
             return;
         }
 
-        if (claimDetails.getAge() < 0
-                || claimDetails.getAge() > 120) {
-
+        if (claimDetails.getAge() < 0 || claimDetails.getAge() > 120) {
             errors.add("Patient Age is invalid.");
         }
-
     }
 
-    private void validateGender(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateGender(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getGender())) {
             errors.add("Gender is mandatory.");
         }
-
     }
 
-    private void validatePolicyNumber(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validatePolicyNumber(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getPolicyNumber())) {
             errors.add("Policy Number is mandatory.");
         }
-
     }
 
-    private void validateMemberId(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateMemberId(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getMemberId())) {
             errors.add("Member ID is mandatory.");
         }
-
     }
 
-    private void validateInsurancePlan(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateInsurancePlan(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getInsurancePlan())) {
             errors.add("Insurance Plan is mandatory.");
         }
-
     }
 
-    private void validateHospitalName(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateHospitalName(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getHospitalName())) {
             errors.add("Hospital Name is mandatory.");
         }
-
     }
 
-    private void validateHospitalType(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateHospitalType(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getHospitalType())) {
             errors.add("Hospital Type is mandatory.");
         }
-
     }
 
-    private void validateHospitalCity(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateHospitalCity(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getHospitalCity())) {
             errors.add("Hospital City is mandatory.");
         }
-
     }
 
-    private void validateDoctorName(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateDoctorName(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getDoctorName())) {
             errors.add("Doctor Name is mandatory.");
         }
-
     }
 
-    private void validateDoctorSpeciality(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateDoctorSpeciality(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getDoctorSpeciality())) {
             errors.add("Doctor Speciality is mandatory.");
         }
-
     }
 
-    private void validateDiagnosis(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateDiagnosis(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getDiagnosis())) {
             errors.add("Diagnosis is mandatory.");
         }
-
     }
 
-    private void validateTreatment(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateTreatment(ClaimDetails claimDetails, List<String> errors) {
         if (isBlank(claimDetails.getTreatmentProvided())) {
             errors.add("Treatment information is mandatory.");
         }
-
     }
 
-    private void validateAdmissionDate(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateAdmissionDate(ClaimDetails claimDetails, List<String> errors) {
         if (claimDetails.getAdmissionDate() == null) {
             errors.add("Admission Date is mandatory.");
         }
-
     }
 
-    private void validateDischargeDate(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateDischargeDate(ClaimDetails claimDetails, List<String> errors) {
         if (claimDetails.getDischargeDate() == null) {
             errors.add("Discharge Date is mandatory.");
         }
-
     }
 
-    private void validateDateSequence(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateDateSequence(ClaimDetails claimDetails, List<String> errors) {
         LocalDate admission = claimDetails.getAdmissionDate();
         LocalDate discharge = claimDetails.getDischargeDate();
-
         if (admission == null || discharge == null) {
             return;
         }
@@ -228,13 +162,9 @@ public class ClaimValidationServiceImpl implements ClaimValidationService {
         if (discharge.isBefore(admission)) {
             errors.add("Discharge Date cannot be before Admission Date.");
         }
-
     }
 
-    private void validateLengthOfStay(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateLengthOfStay(ClaimDetails claimDetails, List<String> errors) {
         LocalDate admission = claimDetails.getAdmissionDate();
         LocalDate discharge = claimDetails.getDischargeDate();
 
@@ -253,98 +183,45 @@ public class ClaimValidationServiceImpl implements ClaimValidationService {
         }
 
         if (!claimDetails.getLengthOfStay().equals((int) actualStay)) {
-
-            errors.add(
-                    "Length of Stay does not match Admission and Discharge Dates.");
-
+            errors.add("Length of Stay does not match Admission and Discharge Dates.");
         }
-
     }
 
-    private void validateClaimAmount(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateClaimAmount(ClaimDetails claimDetails, List<String> errors) {
         if (claimDetails.getClaimAmount() == null) {
-
             errors.add("Claim Amount is mandatory.");
             return;
-
         }
-
         if (claimDetails.getClaimAmount() <= 0) {
-
             errors.add("Claim Amount must be greater than zero.");
-
         }
-
     }
 
-    private void validateRoomCharges(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
-        validatePositiveAmount(
-                claimDetails.getRoomCharges(),
-                "Room Charges",
-                errors);
-
+    private void validateRoomCharges(ClaimDetails claimDetails, List<String> errors) {
+        validatePositiveAmount(claimDetails.getRoomCharges(), "Room Charges", errors);
     }
 
-    private void validateMedicineCharges(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
-        validatePositiveAmount(
-                claimDetails.getMedicineCharges(),
-                "Medicine Charges",
-                errors);
-
+    private void validateMedicineCharges(ClaimDetails claimDetails, List<String> errors) {
+        validatePositiveAmount(claimDetails.getMedicineCharges(), "Medicine Charges", errors);
     }
 
-    private void validateLabCharges(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
-        validatePositiveAmount(
-                claimDetails.getLabCharges(),
-                "Lab Charges",
-                errors);
-
+    private void validateLabCharges(ClaimDetails claimDetails, List<String> errors) {
+        validatePositiveAmount(claimDetails.getLabCharges(), "Lab Charges", errors);
     }
 
-    private void validateProcedureCharges(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
-        validatePositiveAmount(
-                claimDetails.getProcedureCharges(),
-                "Procedure Charges",
-                errors);
-
+    private void validateProcedureCharges(ClaimDetails claimDetails, List<String> errors) {
+        validatePositiveAmount(claimDetails.getProcedureCharges(), "Procedure Charges", errors);
     }
 
-    private void validateDoctorConsultationCharges(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
-        validatePositiveAmount(
-                claimDetails.getDoctorConsultationCharges(),
-                "Doctor Consultation Charges",
-                errors);
-
+    private void validateDoctorConsultationCharges(ClaimDetails claimDetails, List<String> errors) {
+        validatePositiveAmount(claimDetails.getDoctorConsultationCharges(), "Doctor Consultation Charges", errors);
     }
 
-    private void validateFinancialConsistency(
-            ClaimDetails claimDetails,
-            List<String> errors) {
-
+    private void validateFinancialConsistency(ClaimDetails claimDetails, List<String> errors) {
         if (claimDetails.getClaimAmount() == null) {
             return;
         }
-
         double total = 0;
-
         total += value(claimDetails.getRoomCharges());
         total += value(claimDetails.getMedicineCharges());
         total += value(claimDetails.getLabCharges());
@@ -352,47 +229,28 @@ public class ClaimValidationServiceImpl implements ClaimValidationService {
         total += value(claimDetails.getDoctorConsultationCharges());
 
         if (total > 0) {
-
             double difference = Math.abs(claimDetails.getClaimAmount() - total);
-
             if (difference > 5.0) {
-
-                errors.add(
-                        "Claim Amount does not match the total of individual charges.");
-
+                errors.add("Claim Amount does not match the total of individual charges.");
             }
-
         }
-
     }
 
-    private void validatePositiveAmount(
-            Double amount,
-            String fieldName,
-            List<String> errors) {
-
+    private void validatePositiveAmount(Double amount, String fieldName, List<String> errors) {
         if (amount == null) {
             return;
         }
-
         if (amount < 0) {
-
             errors.add(fieldName + " cannot be negative.");
-
         }
-
     }
 
     private double value(Double amount) {
-
         return amount == null ? 0.0 : amount;
-
     }
 
     private boolean isBlank(String value) {
-
         return value == null || value.isBlank();
-
     }
 
 }

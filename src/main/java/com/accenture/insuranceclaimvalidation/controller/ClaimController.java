@@ -2,15 +2,14 @@ package com.accenture.insuranceclaimvalidation.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.accenture.insuranceclaimvalidation.dto.request.ClaimRequest;
-import com.accenture.insuranceclaimvalidation.dto.response.ClaimResponse;
 import com.accenture.insuranceclaimvalidation.dto.response.FileUploadResponse;
 import com.accenture.insuranceclaimvalidation.service.ClaimService;
-
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/claims")
@@ -21,15 +20,6 @@ public class ClaimController {
 
     public ClaimController(ClaimService claimService) {
         this.claimService = claimService;
-    }
-
-    @PostMapping
-    public ResponseEntity<ClaimResponse> processClaim(
-            @Valid @RequestBody ClaimRequest request) {
-
-        ClaimResponse response = claimService.processClaim(request);
-
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/upload")

@@ -10,9 +10,10 @@ import com.accenture.insuranceclaimvalidation.entity.Claim;
 @Repository
 public interface ClaimRepository extends MongoRepository<Claim, String> {
 
-    boolean existsByPolicyNumberAndAdmissionDateAndHospitalName(
-            String policyNumber,
-            LocalDate admissionDate,
-            String hospitalName);
+    boolean existsByPolicyNumberAndMemberIdAndDiagnosisAndAdmissionDate(
+        String policyNumber,
+        String memberId,
+        String diagnosis,
+        LocalDate admissionDate);
 
 }

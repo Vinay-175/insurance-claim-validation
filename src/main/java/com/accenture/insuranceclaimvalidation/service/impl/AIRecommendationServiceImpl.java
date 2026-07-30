@@ -90,8 +90,7 @@ public class AIRecommendationServiceImpl implements AIRecommendationService {
         /**
          * Ensures recommendation response is usable.
          */
-        private void validateRecommendation(
-                        RecommendationResult result) {
+        private void validateRecommendation(RecommendationResult result) {
                 if (result == null) { throw new IllegalStateException("Recommendation response is null."); }
 
                 if (result.getRecommendation() == null) {
