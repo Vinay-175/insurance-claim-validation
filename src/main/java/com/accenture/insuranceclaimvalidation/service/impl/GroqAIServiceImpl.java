@@ -10,8 +10,10 @@ import com.accenture.insuranceclaimvalidation.util.PromptTemplates;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class GroqAIServiceImpl implements AIService {
 
@@ -23,23 +25,80 @@ public class GroqAIServiceImpl implements AIService {
 
         try {
 
+            log.info("Generating extraction prompt.");
+
             String prompt = PromptTemplates.buildClaimExtractionPrompt(extractedText);
 
-            String aiResponse = chatClient.prompt()
+            String aiResponse = chatClient
+                    .prompt()
                     .user(prompt)
                     .call()
                     .content();
 
-            System.out.println("\n========== AI RESPONSE ==========");
-            
-            System.out.println("=================================\n");
+            log.debug("Raw AI Extraction Response:\n{}", aiResponse);
 
-            return objectMapper.readValue(aiResponse, ClaimDetails.class);
+            aiResponse = cleanJson(aiResponse);
 
-        } catch (Exception e) {
+            ClaimDetails claimDetails = objectMapper.readValue(
+                    aiResponse,
+                    ClaimDetails.class);
 
-            throw new AIException("Failed to process AI response.", e);
+            calculateLengthOfStay(claimDetails);
 
+            log.info(
+                    "Claim extraction completed successfully for Policy={}",
+                    claimDetails.getPolicyNumber());
+
+            return claimDetails;
+
+        } catch (Exception ex) {
+
+            log.error("Failed to extract claim details.", ex);
+
+            throw new AIException(
+                    "Failed to process AI response.",
+                    ex);
+
+        }
+
+    }
+
+    private String cleanJson(String response) {
+
+        if (response == null) {
+            return "";
+        }
+
+        response = response
+                .replace("```json", "")
+                .replace("```", "")
+                .trim();
+
+        int start = response.indexOf('{');
+        int end = response.lastIndexOf('}');
+
+        if (start >= 0 && end >= start) {
+            response = response.substring(start, end + 1);
+        }
+
+        return response;
+
+    }
+
+    private void calculateLengthOfStay(
+            ClaimDetails claimDetails) {
+
+        if (claimDetails.getAdmissionDate() == null
+                || claimDetails.getDischargeDate() == null) {
+            return;
+        }
+
+        long days = java.time.temporal.ChronoUnit.DAYS.between(
+                claimDetails.getAdmissionDate(),
+                claimDetails.getDischargeDate());
+
+        if (days >= 0) {
+            claimDetails.setLengthOfStay((int) days);
         }
 
     }

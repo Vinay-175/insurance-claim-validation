@@ -1,7 +1,7 @@
 package com.accenture.insuranceclaimvalidation.service.validation;
 
 import com.accenture.insuranceclaimvalidation.dto.ClaimDetails;
-import com.accenture.insuranceclaimvalidation.dto.response.ValidationResult;
+import com.accenture.insuranceclaimvalidation.dto.ValidationResult;
 
 public interface ClaimValidationService {
 

@@ -1,6 +1,8 @@
 package com.accenture.insuranceclaimvalidation.dto.response;
 
 import com.accenture.insuranceclaimvalidation.dto.ClaimDetails;
+import com.accenture.insuranceclaimvalidation.dto.RecommendationResult;
+import com.accenture.insuranceclaimvalidation.dto.ValidationResult;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileUploadResponse {
+
+    private String claimId;
 
     private String fileName;
 
@@ -26,5 +30,7 @@ public class FileUploadResponse {
     private ClaimDetails claimDetails;
 
     private ValidationResult validationResult;
+
+    private RecommendationResult recommendationResult;
 
 }

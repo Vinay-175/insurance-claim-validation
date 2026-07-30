@@ -1,6 +1,13 @@
-package com.accenture.insuranceclaimvalidation.dto;
+package com.accenture.insuranceclaimvalidation.entity;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.accenture.insuranceclaimvalidation.enums.ClaimStatus;
+import com.accenture.insuranceclaimvalidation.enums.Recommendation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +18,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClaimDetails {
+@Document(collection = "claims")
+public class Claim {
+
+    @Id
+    private String id;
 
     // ===========================
     // Patient Information
@@ -103,4 +114,21 @@ public class ClaimDetails {
 
     private Boolean previousSimilarClaims;
 
+    // ===========================
+    // Processing Status
+    // ===========================
+
+    private ClaimStatus status;
+
+    // ===========================
+    // AI Recommendation
+    // ===========================
+
+    private Recommendation recommendation;
+
+    private String recommendationReason;
+
+    private Double confidence;
+
+    private List<String> observations;
 }

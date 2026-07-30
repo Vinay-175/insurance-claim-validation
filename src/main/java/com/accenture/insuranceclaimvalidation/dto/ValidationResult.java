@@ -1,4 +1,4 @@
-package com.accenture.insuranceclaimvalidation.dto.response;
+package com.accenture.insuranceclaimvalidation.dto;
 
 import java.util.List;
 
