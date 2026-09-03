@@ -7,8 +7,6 @@ import com.accenture.insuranceclaimvalidation.dto.ClaimAssessmentContext;
 import com.accenture.insuranceclaimvalidation.dto.ClaimDetails;
 import com.accenture.insuranceclaimvalidation.dto.RecommendationResult;
 import com.accenture.insuranceclaimvalidation.dto.ValidationResult;
-import com.accenture.insuranceclaimvalidation.dto.request.ClaimRequest;
-import com.accenture.insuranceclaimvalidation.dto.response.ClaimResponse;
 import com.accenture.insuranceclaimvalidation.dto.response.FileUploadResponse;
 import com.accenture.insuranceclaimvalidation.entity.Claim;
 import com.accenture.insuranceclaimvalidation.exception.InvalidFileException;
@@ -89,7 +87,7 @@ public class ClaimServiceImpl implements ClaimService {
                 .validationResult(validationResult)
                 .duplicateClaim(duplicate)
                 .build();
-
+                
         RecommendationResult recommendationResult = aiRecommendationService.recommendClaim(context);
 
         log.info("AI recommendation generated: {}", recommendationResult.getRecommendation());

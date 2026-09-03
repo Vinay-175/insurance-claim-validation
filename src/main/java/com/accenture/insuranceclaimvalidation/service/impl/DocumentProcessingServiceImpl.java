@@ -38,26 +38,34 @@ public class DocumentProcessingServiceImpl implements DocumentProcessingService 
             log.info("Digital PDF is uploaded and text is extracted successfully.");
             return extractedText;
         }
-        BufferedImage image = renderFirstPage(file);
 
-        log.info("Scanned PDF is uploaded. Performing OCR.");
-        return ocrImageService.extractText(image);
+        log.info("Scanned PDF is uploaded. Performing OCR on all pages.");
+
+        return performOCRForAllPages(file);
 
     }
 
-    private BufferedImage renderFirstPage(MultipartFile file) {
+    private String performOCRForAllPages(MultipartFile file) {
+
+        StringBuilder extractedText = new StringBuilder();
 
         try (PDDocument document = Loader.loadPDF(file.getBytes())) {
 
             PDFRenderer renderer = new PDFRenderer(document);
 
-            return renderer.renderImageWithDPI(0, 300);
+            int totalPages = document.getNumberOfPages();
+            log.info("Performing OCR on {} pages.", totalPages);
+
+            for (int page = 0; page < totalPages; page++) {
+                BufferedImage image = renderer.renderImageWithDPI(page, 300);
+                String pageText = ocrImageService.extractText(image);
+                extractedText.append(pageText).append(System.lineSeparator()).append(System.lineSeparator());
+            }
+            return extractedText.toString();
 
         } catch (IOException e) {
-
-            log.error("Unable to render the image from PDF");
-            throw new RuntimeException("Unable to render PDF page.", e);
-
+            log.error("Unable to render PDF pages");
+            throw new RuntimeException("Unable to render PDF pages.", e);
         }
     }
 }
