@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.accenture.insuranceclaimvalidation.exception.InvalidFileException;
 import com.accenture.insuranceclaimvalidation.service.DocumentProcessingService;
 import com.accenture.insuranceclaimvalidation.service.extractor.DocumentExtractor;
 
@@ -26,7 +27,7 @@ public class DocumentProcessingServiceImpl implements DocumentProcessingService 
         return documentExtractors.stream()
                 .filter(extractor -> extractor.supports(file))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Unsupported file format"))
+                .orElseThrow(() -> new InvalidFileException("Unsupported file format"))
                 .extractText(file);
     }
 }
