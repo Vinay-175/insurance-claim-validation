@@ -41,11 +41,6 @@ public class ClaimServiceImpl implements ClaimService {
             throw new InvalidFileException("Uploaded file is empty.");
         }
 
-        if (!"application/pdf".equalsIgnoreCase(file.getContentType())) {
-            log.error("Invalid file type. Only PDF files are allowed.");
-            throw new InvalidFileException("Only PDF files are allowed.");
-        }
-
         String extractedText = documentProcessingService.processDocument(file);
 
         log.info("Document text extracted successfully.");
@@ -87,7 +82,7 @@ public class ClaimServiceImpl implements ClaimService {
                 .validationResult(validationResult)
                 .duplicateClaim(duplicate)
                 .build();
-                
+
         RecommendationResult recommendationResult = aiRecommendationService.recommendClaim(context);
 
         log.info("AI recommendation generated: {}", recommendationResult.getRecommendation());

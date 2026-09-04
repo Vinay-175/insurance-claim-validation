@@ -25,6 +25,21 @@ type ClaimResponse = {
   recommendationResult?: RecommendationResult;
 };
 
+const acceptedFileTypes = [
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
+
+const acceptedFileExtensions = ['.pdf', '.jpg', '.jpeg', '.png', '.docx'];
+
+const isSupportedFile = (selectedFile: File) => {
+  const extension = selectedFile.name.toLowerCase().slice(selectedFile.name.lastIndexOf('.'));
+
+  return acceptedFileTypes.includes(selectedFile.type) || acceptedFileExtensions.includes(extension);
+};
+
 export default function App() {
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<ClaimResponse | null>(null);
@@ -33,7 +48,20 @@ export default function App() {
   const [dragActive, setDragActive] = useState(false);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setFile(event.target.files?.[0] ?? null);
+    const selectedFile = event.target.files?.[0];
+
+    if (!selectedFile) {
+      setFile(null);
+      return;
+    }
+
+    if (!isSupportedFile(selectedFile)) {
+      setFile(null);
+      setError('Please select a PDF, JPG, JPEG, PNG, or DOCX file.');
+      return;
+    }
+
+    setFile(selectedFile);
     setError('');
   };
 
@@ -41,10 +69,18 @@ export default function App() {
     event.preventDefault();
     setDragActive(false);
     const droppedFile = event.dataTransfer.files?.[0];
-    if (droppedFile) {
-      setFile(droppedFile);
-      setError('');
+    if (!droppedFile) {
+      return;
     }
+
+    if (!isSupportedFile(droppedFile)) {
+      setFile(null);
+      setError('Please select a PDF, JPG, JPEG, PNG, or DOCX file.');
+      return;
+    }
+
+    setFile(droppedFile);
+    setError('');
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -72,7 +108,7 @@ export default function App() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!file) {
-      setError('Please select a PDF file first.');
+      setError('Please select a supported claim file first.');
       return;
     }
 
@@ -92,7 +128,7 @@ export default function App() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.message || 'Unable to process the PDF.');
+        throw new Error(data?.message || 'Unable to process the claim file.');
       }
 
       setResult(data as ClaimResponse);
@@ -111,7 +147,7 @@ export default function App() {
             <span className="eyebrow">Smart claims, faster decisions</span>
             <h1>Insurance Claim Validation with AI</h1>
             <p>
-              Upload your claim PDF and get instant validation, confidence scoring, and AI-backed recommendations in a beautifully responsive interface.
+              Upload your claim and get instant validation, confidence scoring, and AI-backed recommendations in a beautifully responsive interface.
             </p>
             <div className="stats-grid">
               <div>
@@ -132,10 +168,14 @@ export default function App() {
           <div className="upload-card">
             <div className={`drop-zone ${dragActive ? 'active' : ''}`} onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
               <div className="drop-icon">📄</div>
-              <h2>Upload your claim PDF</h2>
+              <h2>Upload your claim</h2>
               <p>Drag & drop here, or click to choose a file.</p>
               <label className="file-label">
-                <input type="file" accept="application/pdf" onChange={handleFileChange} />
+                <input
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png,.docx,application/pdf,image/jpeg,image/png,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  onChange={handleFileChange}
+                />
                 Browse file
               </label>
               {file && <p className="file-meta">Selected: {file.name}</p>}
